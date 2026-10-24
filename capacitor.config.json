@@ -1,0 +1,27 @@
+{
+  "appId": "com.bapasitaram.billing",
+  "appName": "Bapa Sitaram",
+  "webDir": "www",
+  "backgroundColor": "#1b1916",
+  "ios": {
+    "contentInset": "never",
+    "backgroundColor": "#1b1916",
+    "allowsLinkPreview": false
+  },
+  "android": {
+    "backgroundColor": "#1b1916"
+  },
+  "plugins": {
+    "SplashScreen": {
+      "launchShowDuration": 400,
+      "launchAutoHide": true,
+      "launchFadeOutDuration": 200,
+      "backgroundColor": "#1b1916",
+      "showSpinner": false
+    },
+    "StatusBar": {
+      "style": "DARK",
+      "overlaysWebView": true
+    }
+  }
+}

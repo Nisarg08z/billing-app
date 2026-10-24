@@ -1,0 +1,31 @@
+{
+  "name": "bapa-sitaram-billing",
+  "version": "3.0.0",
+  "private": true,
+  "description": "Restaurant billing app for Bapa Sitaram Restaurant (PWA + Capacitor iOS/Android).",
+  "scripts": {
+    "serve": "npx --yes http-server www -p 8080 -c-1",
+    "icons": "node scripts/make-icons.js",
+    "assets": "npx capacitor-assets generate --iconBackgroundColor #1b1916 --splashBackgroundColor #1b1916 --splashBackgroundColorDark #1b1916",
+    "ios:add": "npx cap add ios && npm run assets",
+    "ios:open": "npx cap sync ios && npx cap open ios",
+    "android:add": "npx cap add android && npm run assets",
+    "android:open": "npx cap sync android && npx cap open android",
+    "sync": "npx cap sync"
+  },
+  "dependencies": {
+    "@capacitor/android": "^7.0.0",
+    "@capacitor/app": "^7.0.0",
+    "@capacitor/core": "^7.0.0",
+    "@capacitor/filesystem": "^7.0.0",
+    "@capacitor/haptics": "^7.0.0",
+    "@capacitor/ios": "^7.0.0",
+    "@capacitor/share": "^7.0.0",
+    "@capacitor/splash-screen": "^7.0.0",
+    "@capacitor/status-bar": "^7.0.0"
+  },
+  "devDependencies": {
+    "@capacitor/assets": "^3.0.5",
+    "@capacitor/cli": "^7.0.0"
+  }
+}

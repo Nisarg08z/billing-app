@@ -1,0 +1,48 @@
+# Builds the iOS app in the cloud on a Mac (Codemagic), so no Mac is needed locally.
+# Before the first run:
+#   1. Put this folder in a GitHub repository and connect it at codemagic.io.
+#   2. In Codemagic → Team integrations → Developer Portal, add an App Store Connect API key
+#      and name it "bapa_sitaram_asc" (or change the name below).
+#   3. In App Store Connect, create the app with bundle ID com.bapasitaram.billing.
+# Each build is uploaded to TestFlight, where you install it on your iPhone.
+workflows:
+  ios-testflight:
+    name: iOS → TestFlight
+    max_build_duration: 60
+    integrations:
+      app_store_connect: bapa_sitaram_asc
+    environment:
+      node: 20
+      xcode: latest
+      cocoapods: default
+      ios_signing:
+        distribution_type: app_store
+        bundle_identifier: com.bapasitaram.billing
+    scripts:
+      - name: Install packages
+        script: npm install
+      - name: Create the iOS project and icons
+        script: |
+          [ -d ios ] || npx cap add ios
+          npm run assets
+          npx cap sync ios
+      - name: App settings (portrait + landscape, light status bar text during launch)
+        script: |
+          PLIST=ios/App/App/Info.plist
+          /usr/libexec/PlistBuddy -c "Set :CFBundleDisplayName 'Bapa Sitaram'" $PLIST || /usr/libexec/PlistBuddy -c "Add :CFBundleDisplayName string 'Bapa Sitaram'" $PLIST
+          /usr/libexec/PlistBuddy -c "Add :UIViewControllerBasedStatusBarAppearance bool true" $PLIST || true
+          /usr/libexec/PlistBuddy -c "Add :ITSAppUsesNonExemptEncryption bool false" $PLIST || true
+      - name: Signing
+        script: xcode-project use-profiles
+      - name: Build number
+        script: |
+          cd ios/App
+          agvtool new-version -all $BUILD_NUMBER
+      - name: Build .ipa
+        script: xcode-project build-ipa --workspace ios/App/App.xcworkspace --scheme App
+    artifacts:
+      - build/ios/ipa/*.ipa
+    publishing:
+      app_store_connect:
+        auth: integration
+        submit_to_testflight: true
