@@ -93,8 +93,8 @@ button, a, [role="button"], label, nav.tabs, .seg, .chip, .pill, .tcard, .dish, 
 /* Screen transitions: tab swipes slide sideways, opening a table pushes in from the right */
 .screen.in-right { animation: inRight .38s var(--ease); }
 .screen.in-left { animation: inLeft .38s var(--ease); }
-@keyframes inRight { from { transform: translateX(48px); opacity: 0; } }
-@keyframes inLeft { from { transform: translateX(-48px); opacity: 0; } }
+@keyframes inRight { from { transform: translateX(40px); } }
+@keyframes inLeft { from { transform: translateX(-40px); } }
 .screen.dragging { transition: none !important; will-change: transform; }
 #s-order.dragging { box-shadow: -20px 0 40px rgba(0,0,0,.18); background: var(--bg); }
 .sheet { overscroll-behavior: contain; }
@@ -283,7 +283,7 @@ input::placeholder { color: var(--mute); }
 .link-btn { color: var(--mute); font-weight: 600; font-size: 14px; padding: 6px 0; }
 .link-btn.danger { color: var(--danger); }
 .lines { margin: 6px 0 4px; }
-.line { display: grid; grid-template-columns: 1fr auto; gap: 2px 12px; padding: 12px 0; border-bottom: 1px dashed var(--line); align-items: center; animation: fadeIn .3s var(--ease); }
+.line { display: grid; grid-template-columns: 1fr auto; gap: 2px 12px; padding: 12px 0; border-bottom: 1px dashed var(--line); align-items: center; }
 .line .ln { font-weight: 600; }
 .line .lp { color: var(--mute); font-size: 13px; }
 .line .lt { font-weight: 700; text-align: right; font-size: 14px; grid-column: 2; }
@@ -344,7 +344,8 @@ button.li:active { background: var(--soft); }
 .pay .k svg { width: 17px; height: 17px; color: var(--brass); }
 .pay .v { font-family: var(--serif); font-weight: 600; font-size: clamp(17px, 4.8vw, 22px); overflow-wrap: anywhere; }
 .meter { height: 5px; border-radius: 3px; background: var(--soft); overflow: hidden; }
-.meter i { display: block; height: 100%; border-radius: 3px; background: var(--gold); transform-origin: left; animation: grow .9s var(--ease) both; }
+.meter i { display: block; height: 100%; border-radius: 3px; background: var(--gold); transform-origin: left; }
+.entering .meter i { animation: grow .9s var(--ease) both; } /* bars grow only on first launch, not on every redraw */
 .rank { display: grid; grid-template-columns: 26px 1fr auto; gap: 4px 12px; align-items: center; padding: 12px 16px; }
 .rank .rn { font-family: var(--serif); font-weight: 700; color: var(--brass); font-size: 18px; grid-row: span 2; }
 .rank .rq { font-weight: 700; font-size: 14px; }
@@ -516,12 +517,6 @@ nav.tabs button:active .ico { transform: scale(.9); }
 .cat-card.open .cat-chev { transform: rotate(90deg); }
 .cat-card.open .cat-top { border-radius: var(--r-lg) var(--r-lg) 0 0; }
 .cat-card + .cat-card { margin-top: 8px; }
-
-/* "Live" badge: shown while this phone receives instant updates from the others */
-.live-dot { display: inline-flex; align-items: center; gap: 5px; margin-left: 8px; font-size: 11px; font-weight: 700; color: var(--ok);
-  opacity: 0; transform: translateY(2px); transition: opacity .3s, transform .3s var(--ease); vertical-align: 1px; }
-.live-dot::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: currentColor; animation: pulse 1.6s ease-in-out infinite; }
-.live-dot.on { opacity: 1; transform: none; }
 
 /* Hide scrollbars everywhere (page, sheets, bill panel, chips). Scrolling by finger, wheel and keyboard still works. */
 html, body, * { scrollbar-width: none; -ms-overflow-style: none; }

@@ -35,7 +35,7 @@ export default function BillingApp({ initial }) {
       <section className="screen on" id="s-tables">
         <header className="appbar band">
           <div className="titles">
-            <div className="eyebrow"><span id="greet">Good evening</span><span id="liveDot" className="live-dot" title="Updates from other phones appear instantly">Live</span></div>
+            <div className="eyebrow" id="greet">Good evening</div>
             <h1 id="restName">Bapa Sitaram</h1>
           </div>
           <button className="chip-btn" id="quickTakeaway"><I d="M12 5v14M5 12h14" w={2.4} />Takeaway</button>
