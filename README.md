@@ -1,86 +1,50 @@
 # Bapa Sitaram Billing
 
-Restaurant billing app: tables, orders, bills, daily sales. Works offline; data stays on the device.
-One codebase runs as a website, an installable web app, and a native iOS / Android app (Capacitor).
+Restaurant billing website: tables, orders, bills, daily sales. Built with **Next.js**, data stored in **MongoDB**.
+Every phone that signs in sees the same tables, running orders and bills. Changes appear on the other phones in under a second
+(live updates via Server-Sent Events and MongoDB change streams, `app/api/live`; an 8-second check is the fallback).
 
 ```
-www/                  the app (index.html, manifest, service worker, icons)
-assets/               app icon + launch screen sources for iOS / Android
-scripts/make-icons.js regenerates icons and launch screens
-scripts/get-fonts.js  downloads the fonts into www/fonts (they ship with the app, so it works offline)
-capacitor.config.json native app settings
-codemagic.yaml        cloud iOS build (no Mac needed)
+app/                 pages (/, /login) and API routes (app/api/*)
+components/          BillingApp.jsx: the screens' markup
+lib/client/app.js    everything the screens do: orders, bills, gestures, printing, sync with the server
+lib/data.js          MongoDB reads and writes
+lib/auth.js          password sign-in (cookie)
+public/              fonts, icons, web app manifest
 ```
 
 ## Features
 
-- Opening animation with the Bapa Sitaram name (tap to skip)
-- Tables with Free / Running status, time open, and filters; long-press a table to open, print KOT,
+- Tables with Free / Running status, time open, and filters; long-press a table to open,
   move the order to another table, or clear it
 - Menu with categories and search; tap a dish to add, − / + on the card and in the bill
-- Discount %, GST % (printed as CGST + SGST), payment Cash / UPI / Card
-- Print bill (80 mm thermal), print KOT, share bill on WhatsApp
+- Discount %, GST % (printed as CGST + SGST), payment Cash / UPI
+- Bill receipt on screen, with the UPI QR for UPI payments
 - Bills: any date, sales by payment mode, top dishes, cancel a bill, export CSV
-- Settings: restaurant details, light / dark / system theme, menu, categories, tables, backup and restore
+- Settings: light / dark / system theme (per phone), menu, categories, tables, sign-in password
+- Phone gestures: swipe between tabs, swipe from the left edge to go back, drag sheets down to close
 
-### Phone gestures
-- Swipe left / right to move between Tables, Bills and Settings
-- Swipe from the left edge on an order to go back
-- Drag the bill or receipt down to close it
-- Long-press a table for quick actions
+## Setup
 
-### In the native app only
-- Haptic feedback (taps, saving a bill, warnings)
-- Status bar colour follows the theme
-- Backup and CSV export open the iOS share sheet (Save to Files, WhatsApp, Mail)
-- Android back button closes sheets and goes back
-
-## Run on this computer
-
-```bash
-npm run serve
-```
-
-Open http://localhost:8080.
-
-## Build the iOS app
-
-Apple only lets iOS apps be built on a Mac. You need an **Apple Developer account** ($99/year) either way.
-
-### Without a Mac: Codemagic (cloud Mac)
-
-1. Put this folder in a GitHub repository.
-2. Sign in at codemagic.io with GitHub and add the repository.
-3. Follow the three setup notes at the top of `codemagic.yaml` (App Store Connect API key, app record).
-4. Start the **iOS → TestFlight** workflow. When it finishes, install the build on your iPhone
-   from the **TestFlight** app.
-
-### With a Mac
+1. Copy `.env.example` to `.env.local` and fill in:
+   - `MONGODB_URI`: your MongoDB Atlas connection string
+   - `MONGODB_DB`: database name (default `bapa_sitaram`)
+   - `APP_PASSWORD`: the password staff type to sign in
+   - `AUTH_SECRET`: a long random string
+2. In MongoDB Atlas → **Network Access**, allow the IP address of the computer or server running the site
+   (for Vercel, allow `0.0.0.0/0`, since Vercel has no fixed IP).
 
 ```bash
 npm install
-npm run ios:add
-npm run ios:open
+npm run dev
 ```
 
-In Xcode: choose your team under *Signing & Capabilities*, then Product → Archive.
+Open http://localhost:3000. To try it on your phone on the same Wi-Fi, open `http://<this computer's IP>:3000`.
 
-## Android APK (works on Windows)
+## Put it online (Vercel, free)
 
-Install Android Studio, then:
+1. Push this folder to GitHub (`.env.local` is not uploaded; it is in `.gitignore`).
+2. On vercel.com → **Add New Project** → pick the repository.
+3. Under **Environment Variables**, add the four values from `.env.local`.
+4. Deploy. Open the URL on each phone and sign in. To put it on the home screen, use the browser menu → Add to Home Screen.
 
-```bash
-npm run android:add
-npm run android:open
-```
-
-Build → Build App Bundle(s) / APK(s) → Build APK(s).
-
-After any change in `www/`, run `npm run sync` before building again.
-After changing the logo in `scripts/make-icons.js`, run `npm run icons` and `npm run assets`.
-
-## Things to check on a real iPhone
-
-- **Printing**: printing from inside an iOS app view has not been tested yet. If the Print button does
-  nothing in the app, a print plugin needs to be added.
-"# billing-app" 

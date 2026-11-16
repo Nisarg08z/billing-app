@@ -1,4 +1,9 @@
 node_modules/
-ios/
-android/
+.next/
+out/
+.env*.local
+.env
+.vercel
 .claude/
+*.tsbuildinfo
+next-env.d.ts
